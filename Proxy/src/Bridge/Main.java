@@ -35,6 +35,10 @@ public class Main {
 					win.draw();
 					//win.drawButton(100, 100, 150, 40, "Hello");
 					win.drawLoadButton(50, 50, 150, 40, "Load Image");
+					win.drawPreviousButton(50, 300, 50, 50, "");
+					win.drawNextButton(1000, 300, 50, 50, "");
+
+					
 					
 				} catch (Exception e) {
 					e.printStackTrace();

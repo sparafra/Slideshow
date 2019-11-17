@@ -210,6 +210,14 @@ public class WindowsImplementor implements WindowImplementor {
 		
 		
 	}
+	public void drawPreviousButton(int x, int y, int width, int height, String text) {
+		
+		
+	}
+	public void drawNextButton(int x, int y, int width, int height, String text) {
+	
+	
+	}
 	
 	public void init()
 	{

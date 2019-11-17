@@ -17,6 +17,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -33,10 +36,13 @@ public class MacImplementor implements WindowImplementor {
 	JFrame frame;
 	
 	JLabel hello;
-	JLabel image;
+	//JLabel image;
 
 	Timer t;
 	int fade_time;
+	
+	ArrayList<PictureProxy> proxyList;
+	int indexSelectedImage;
 	
 	public MacImplementor()
 	{
@@ -213,16 +219,41 @@ public class MacImplementor implements WindowImplementor {
         {  
             public void mouseClicked(MouseEvent e)  
             {  
-            	loadImage();
-                            
+            	loadImages();            
             }  
         }); 
         
+
+        /*
+		JButton Button = new JButton(text);
+		Button.setHorizontalAlignment(SwingConstants.LEFT);
+        Button.setBounds(x, y, width, height);
         
-     
+		frame.getContentPane().add(Button);
+		*/
+		frame.getContentPane().add(Button2);
+
+	}
+
+	public void drawNextButton(int x, int y, int width, int height, String text)
+	{
+		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\dx_white.png").getImage(), width, height));
+		JLabel Button2 = new JLabel(closeImgResized);
+		Button2.setHorizontalAlignment(SwingConstants.CENTER);
+        Button2.setBounds(x, y, width, height);
+        Button2.setIconTextGap(-(width/2) - (text.length()*2));
+        Button2.setText(text);
         
+                
+        Button2.addMouseListener(new MouseAdapter()  
+        {  
+            public void mouseClicked(MouseEvent e)  
+            {  
+            	showNext();          
+            }  
+        }); 
         
-        
+
         /*
 		JButton Button = new JButton(text);
 		Button.setHorizontalAlignment(SwingConstants.LEFT);
@@ -234,8 +265,57 @@ public class MacImplementor implements WindowImplementor {
 
 	}
 	
+	public void drawPreviousButton(int x, int y, int width, int height, String text)
+	{
+		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\sx_white.png").getImage(), width, height));
+		JLabel Button2 = new JLabel(closeImgResized);
+		Button2.setHorizontalAlignment(SwingConstants.CENTER);
+        Button2.setBounds(x, y, width, height);
+        Button2.setIconTextGap(-(width/2) - (text.length()*2));
+        Button2.setText(text);
+        
+                
+        Button2.addMouseListener(new MouseAdapter()  
+        {  
+            public void mouseClicked(MouseEvent e)  
+            {  
+            	showPrevious();            
+            }  
+        }); 
+        
+
+        /*
+		JButton Button = new JButton(text);
+		Button.setHorizontalAlignment(SwingConstants.LEFT);
+        Button.setBounds(x, y, width, height);
+        
+		frame.getContentPane().add(Button);
+		*/
+		frame.getContentPane().add(Button2);
+
+	}
+	
+	public void showNext()
+	{	
+		if(indexSelectedImage < proxyList.size()-1)
+		{
+			indexSelectedImage++;
+			showImage(indexSelectedImage);
+		}
+	}
+	
+	public void showPrevious()
+	{	
+		if(indexSelectedImage > 0)
+		{
+			indexSelectedImage--;
+			showImage(indexSelectedImage);
+		}
+	}
+	
 	public void init()
 	{
+		indexSelectedImage = -1;
 		
 		frame = new JFrame();
 		
@@ -244,16 +324,38 @@ public class MacImplementor implements WindowImplementor {
 
 		int maxWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		int maxHeight = (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()-50);
+		int minWidth = 1100;
+		int minHeight = 700;
 		frame.setMaximizedBounds(new Rectangle(maxWidth, maxHeight));
-		frame.setMinimumSize(new Dimension(1100, 700));
+		frame.setMinimumSize(new Dimension(minWidth, minHeight));
 		
-		frame.setBounds(100, 100, 1100, 700);
+		frame.setBounds(100, 100, minWidth, minHeight);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 	    frame.setUndecorated(true);
 	    
 	    frame.setVisible(true);
 	    
+	    
+	 // Create a JLabel
+    	JLabel image =new JLabel();
+        image.setName("Preview");           
+        
+        // Set the text position bottom center relative
+        // to the icon so that the icon appears as a
+        // a desktop icon
+        image.setVerticalAlignment(SwingConstants.CENTER);
+        image.setHorizontalAlignment(SwingConstants.CENTER);
+        image.setBounds(frame.getBounds().width/7, frame.getBounds().height/6 , 800, 500);
+                
+        image.setOpaque(true);
+        
+        // Set some font
+
+        image.setBackground(new Color(40,40,40));
+        // Add the JLabel
+        frame.getContentPane().add(image);
+        frame.repaint();
 		
 	}
 
@@ -268,59 +370,66 @@ public class MacImplementor implements WindowImplementor {
 	    return resizedImg;
 	}
 
-	private void loadImage()
+	private void loadImages()
 	{
-		PictureProxy pic = new PictureProxy("wallpaper1.jpg");
-    	// Create a JLabel
-    	image =new JLabel(new ImageIcon(pic.getMedia().getScaledInstance(800, 500, Image.SCALE_DEFAULT)));
-                        
-        System.out.println(pic.getByte());
-        System.out.println(pic.getDimension().getWidth() + "x" + pic.getDimension().getHeight());
-        
-        // Set the text position bottom center relative
-        // to the icon so that the icon appears as a
-        // a desktop icon
-        image.setVerticalAlignment(SwingConstants.CENTER);
-        image.setHorizontalAlignment(SwingConstants.CENTER);
-        image.setBounds(frame.getBounds().width/7, frame.getBounds().height/6 , 800, 500);
+		ArrayList<String> files = getFilesName(System.getProperty("user.dir")+"\\Images\\Media");
+		
+		System.out.println(files.size());
+		
+		proxyList = new ArrayList<>();
+		for(int k=0; k<files.size(); k++)
+			proxyList.add(new PictureProxy(files.get(k)));
+		
+		System.out.println("End");
 
-        // Set the icon to the JLabel
-        //l.setIcon(icon);
-        
-        // Set foreground
-        image.setForeground(new Color(255,255,255));
-        
-        image.setOpaque(true);
-        
-        // Set some font
-        image.setFont(new Font("KG Always A GoodTime", Font.PLAIN,40));
-
-        image.setBackground(new Color(40,40,40));
-        // Add the JLabel
-        frame.getContentPane().add(image);
-        frame.repaint();
-
-        
-        // Create a Timer with that executes
-        // each 1ms
-        t=new Timer(10,new ActionListener(){
-        
-            public void actionPerformed(ActionEvent ae)
-            {
-                // Increase the alpha value by time
-                // so that transparency decreases for each
-                // actionPerformed() call
-            	image.setForeground(new Color(255,255,255,fade_time++));
-            	//image.setBackground(new Color(0,0,0,fade_time));
-                if(fade_time==255) t.stop();
-            }
-        });
-        
-        // Set some initial delay, optional
-        t.setInitialDelay(20);
-        
-        // Start the timer
-        t.start();
+    	
 	}
+	
+	private static ArrayList<String> getFilesName(String Path)
+	{
+		ArrayList<String> files = new ArrayList<>();
+		File directory = new File(Path);
+        //get all the files from a directory
+        File[] fList = directory.listFiles();
+        for (File file : fList)
+        {
+        	if (file.isFile())
+            {
+        		files.add(file.getName());
+        		System.out.println(file.getName());
+            }
+        }
+        return files;
+	}
+	
+	
+	
+	public void showImage(int index)
+	{
+		
+		for (Component jc : frame.getContentPane().getComponents()) {
+            if (jc instanceof JLabel) {
+                JLabel label = (JLabel) jc;
+                //System.out.println(label.getName());
+                if(label.getName() != null )
+                {
+                	if(label.getName().equals("Preview"))
+                	{
+                		label.setIcon(new ImageIcon(proxyList.get(index).getMedia().getScaledInstance(800, 500, Image.SCALE_DEFAULT)));
+                	}
+                }
+            }
+		}  
+        
+	}
+	
+	
+	public Dimension getPosition(int WidthPercentage, int HeightPercentage)
+	{
+		int width = (frame.getWidth() / 100) * WidthPercentage;
+		int height = (frame.getHeight() / 100) * HeightPercentage;
+		return new Dimension(width, height);
+	}
+	
 	
 }

@@ -25,4 +25,16 @@ public class IconWindow extends Window{
 	{
 		Implementor.drawLoadButton(x, y, width, height, text);
 	}
+	
+	@Override
+	public void drawPreviousButton(int x, int y, int width, int height, String text)
+	{
+		Implementor.drawPreviousButton(x, y, width, height, text);
+	}
+	
+	@Override
+	public void drawNextButton(int x, int y, int width, int height, String text)
+	{
+		Implementor.drawNextButton(x, y, width, height, text);
+	}
 }
