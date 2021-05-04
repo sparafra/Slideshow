@@ -66,5 +66,10 @@ public class Picture implements Media {
 	public Double getByte() {
 		return Byte;
 	}
+	
+	@Override
+	public String getName() {
+		return Name;
+	}
 
 }

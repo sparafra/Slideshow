@@ -45,5 +45,9 @@ public class PictureProxy implements Media {
 	public Double getByte() {
 		return Pic.getByte();
 	}
+	@Override
+	public String getName() {
+		return Pic.getName();
+	}
 
 }

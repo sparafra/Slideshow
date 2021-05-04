@@ -10,5 +10,5 @@ public interface Media {
 	public void Load(String name);
 	public Dimension getDimension();
 	public Double getByte();
-	
+	public String getName();
 }

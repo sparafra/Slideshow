@@ -8,8 +8,9 @@ public class IconWindow extends Window{
 	}
 	
 	@Override
-	public void draw()
+	public void draw(int x, int y)
 	{
+		Implementor.draw(x, y);
 		Implementor.drawBar();
 		Implementor.drawTitle();
 	}
@@ -27,14 +28,20 @@ public class IconWindow extends Window{
 	}
 	
 	@Override
-	public void drawPreviousButton(int x, int y, int width, int height, String text)
+	public void drawPreviousButton(int x, int y, int width, int height, String text, boolean visible)
 	{
-		Implementor.drawPreviousButton(x, y, width, height, text);
+		Implementor.drawPreviousButton(x, y, width, height, text, visible);
 	}
 	
 	@Override
-	public void drawNextButton(int x, int y, int width, int height, String text)
+	public void drawNextButton(int x, int y, int width, int height, String text, boolean visible)
 	{
-		Implementor.drawNextButton(x, y, width, height, text);
+		Implementor.drawNextButton(x, y, width, height, text, visible);
+	}
+	
+	@Override
+	public void drawLabel(int x, int y, int width, int height, String text, boolean visible, String Name)
+	{
+		Implementor.drawLabel(x, y, width, height, text, visible, Name);
 	}
 }

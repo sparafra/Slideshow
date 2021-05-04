@@ -44,9 +44,21 @@ public class MacImplementor implements WindowImplementor {
 	ArrayList<PictureProxy> proxyList;
 	int indexSelectedImage;
 	
+	Dimension position;
+	Dimension dimension;
+	
+	int minWidth = 1100;
+	int minHeight = 800;
+	
+	
 	public MacImplementor()
 	{
-		init();
+
+	}
+	
+	public void draw(int x, int y)
+	{
+		init(x, y);
 	}
 	
 	public void drawBar() {
@@ -55,20 +67,26 @@ public class MacImplementor implements WindowImplementor {
 		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\Red.png").getImage(), 15, 15));
 		JLabel Close = new JLabel(closeImgResized);
 		Close.setHorizontalAlignment(SwingConstants.LEFT);
-        Close.setBounds(13, 10, 15, 15);
+		position = getPosition(1, 1, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		dimension = getPosition(2, 3, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+        Close.setBounds((int)position.getWidth(), (int)position.getHeight(), (int)dimension.getWidth(), (int)dimension.getHeight());
 
         
 		ImageIcon fullImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\Yellow.png").getImage(), 15, 15));
 		JLabel FullSize = new JLabel(fullImgResized);
 		FullSize.setHorizontalAlignment(SwingConstants.LEFT);
-        FullSize.setBounds(40, 10, 15, 15);
-        
+		position = getPosition(3, 1, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		dimension = getPosition(2, 3, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+        FullSize.setBounds((int)position.getWidth(), (int)position.getHeight(), (int)dimension.getWidth(), (int)dimension.getHeight());
+
 
 		ImageIcon minimizeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\Green.png").getImage(), 15, 15));
 		JLabel Minimize = new JLabel(minimizeImgResized);
 		Minimize.setHorizontalAlignment(SwingConstants.LEFT);
-		Minimize.setBounds(67, 10, 15, 15);
-        
+		position = getPosition(5, 1, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		dimension = getPosition(2, 3, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		Minimize.setBounds((int)position.getWidth(), (int)position.getHeight(), (int)dimension.getWidth(), (int)dimension.getHeight());
+
 		Close.addMouseListener(new MouseAdapter()  
         {  
             public void mouseClicked(MouseEvent e)  
@@ -80,13 +98,20 @@ public class MacImplementor implements WindowImplementor {
 		FullSize.addMouseListener(new MouseAdapter()  
         {  
             public void mouseClicked(MouseEvent e)  
-            {  
+            {             	  	
+            	
             	if(frame.getExtendedState() == frame.MAXIMIZED_BOTH)
             	{
+            		refreshPercentage((int)frame.getMinimumSize().getWidth(), (int)frame.getMinimumSize().getHeight());
                 	frame.setExtendedState(frame.NORMAL);
             	}
             	else
+            	{
+            		refreshPercentage((int)frame.getMaximizedBounds().getWidth(), (int)frame.getMaximizedBounds().getHeight());
             		frame.setExtendedState(frame.MAXIMIZED_BOTH);
+            	}
+            	System.out.println(frame.getWidth() + "x" + frame.getHeight());
+            	frame.repaint();
             }  
         }); 
 		
@@ -114,8 +139,12 @@ public class MacImplementor implements WindowImplementor {
 		
 		JLabel Title = new JLabel("Mac Window");
 		Title.setHorizontalAlignment(SwingConstants.LEFT);
-		Title.setBounds(94, 10, 150, 15);
-		Title.setForeground(Color.WHITE);;
+		position = getPosition(8, 1, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		dimension = getPosition(14, 3, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		//Title.setBounds(94, 10, 150, 15);
+		Title.setBounds((int)position.getWidth(), (int)position.getHeight(), (int)dimension.getWidth(), (int)dimension.getHeight());
+
+		Title.setForeground(Color.WHITE);
 		
 		frame.getContentPane().add(Title);
 
@@ -123,10 +152,13 @@ public class MacImplementor implements WindowImplementor {
 	
 	public void drawButton(int x, int y, int width, int height, String text)
 	{
-		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\Button.png").getImage(), width, height));
+		position = getPosition(x, y, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		dimension = getPosition(width, height, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		
+		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\Button.png").getImage(), (int)dimension.getWidth(), (int)dimension.getHeight()));
 		JLabel Button2 = new JLabel(closeImgResized);
 		Button2.setHorizontalAlignment(SwingConstants.CENTER);
-        Button2.setBounds(x, y, width, height);
+        Button2.setBounds((int)position.getWidth(), (int)position.getHeight(), (int)dimension.getWidth(), (int)dimension.getHeight());
         Button2.setIconTextGap(-(width/2) - (text.length()*2));
         Button2.setFont(new Font(Font.SERIF, Font.PLAIN,40));
         Button2.setText(text);
@@ -189,110 +221,121 @@ public class MacImplementor implements WindowImplementor {
             }  
         }); 
         
-        
-     
-        
-        
-        
-        /*
-		JButton Button = new JButton(text);
-		Button.setHorizontalAlignment(SwingConstants.LEFT);
-        Button.setBounds(x, y, width, height);
-        
-		frame.getContentPane().add(Button);
-		*/
+
 		frame.getContentPane().add(Button2);
 
 	}
 
 	public void drawLoadButton(int x, int y, int width, int height, String text)
-	{
-		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\Button.png").getImage(), width, height));
+	{	
+		position = getPosition(x, y, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		dimension = getPosition(width, height, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		
+		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\Button.png").getImage(), (int)dimension.getWidth(), (int)dimension.getHeight()));
 		JLabel Button2 = new JLabel(closeImgResized);
 		Button2.setHorizontalAlignment(SwingConstants.CENTER);
-        Button2.setBounds(x, y, width, height);
-        Button2.setIconTextGap(-(width/2) - (text.length()*2));
+        Button2.setBounds((int)position.getWidth(), (int)position.getHeight(), (int)dimension.getWidth(), (int)dimension.getHeight());
+        Button2.setIconTextGap(-((int)dimension.getWidth()/2) - (text.length()*2));
         Button2.setText(text);
-        
+        Button2.setName("Load");
+
                 
         Button2.addMouseListener(new MouseAdapter()  
         {  
             public void mouseClicked(MouseEvent e)  
             {  
-            	loadImages();            
+            	loadImages(); 
+            	showNext();
+            	refreshDirectionalArrow();
             }  
         }); 
         
 
-        /*
-		JButton Button = new JButton(text);
-		Button.setHorizontalAlignment(SwingConstants.LEFT);
-        Button.setBounds(x, y, width, height);
-        
-		frame.getContentPane().add(Button);
-		*/
+       
 		frame.getContentPane().add(Button2);
 
 	}
 
-	public void drawNextButton(int x, int y, int width, int height, String text)
+	public void drawNextButton(int x, int y, int width, int height, String text, boolean visible)
 	{
-		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\dx_white.png").getImage(), width, height));
+		position = getPosition(x, y, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		dimension = getPosition(width, height, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		
+		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\dx_white.png").getImage(), (int)dimension.getWidth(), (int)dimension.getHeight()));
 		JLabel Button2 = new JLabel(closeImgResized);
 		Button2.setHorizontalAlignment(SwingConstants.CENTER);
-        Button2.setBounds(x, y, width, height);
+        Button2.setBounds((int)position.getWidth(), (int)position.getHeight(), (int)dimension.getWidth(), (int)dimension.getHeight());
         Button2.setIconTextGap(-(width/2) - (text.length()*2));
         Button2.setText(text);
-        
-                
+        Button2.setName("Next");
+        Button2.setVisible(visible);
+
         Button2.addMouseListener(new MouseAdapter()  
         {  
             public void mouseClicked(MouseEvent e)  
             {  
-            	showNext();          
+            	showNext();        
             }  
         }); 
         
 
-        /*
-		JButton Button = new JButton(text);
-		Button.setHorizontalAlignment(SwingConstants.LEFT);
-        Button.setBounds(x, y, width, height);
         
-		frame.getContentPane().add(Button);
-		*/
 		frame.getContentPane().add(Button2);
 
 	}
 	
-	public void drawPreviousButton(int x, int y, int width, int height, String text)
+	public void drawPreviousButton(int x, int y, int width, int height, String text, boolean visible)
 	{
-		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\sx_white.png").getImage(), width, height));
+		position = getPosition(x, y, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		dimension = getPosition(width, height, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		
+		ImageIcon closeImgResized = new ImageIcon(getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\MacIcon\\sx_white.png").getImage(), (int)dimension.getWidth(), (int)dimension.getHeight()));
 		JLabel Button2 = new JLabel(closeImgResized);
 		Button2.setHorizontalAlignment(SwingConstants.CENTER);
-        Button2.setBounds(x, y, width, height);
+        Button2.setBounds((int)position.getWidth(), (int)position.getHeight(), (int)dimension.getWidth(), (int)dimension.getHeight());
         Button2.setIconTextGap(-(width/2) - (text.length()*2));
         Button2.setText(text);
-        
+        Button2.setName("Previous");
+        Button2.setVisible(visible);
                 
         Button2.addMouseListener(new MouseAdapter()  
         {  
             public void mouseClicked(MouseEvent e)  
             {  
-            	showPrevious();            
+            	showPrevious();        
+
             }  
         }); 
         
 
-        /*
-		JButton Button = new JButton(text);
-		Button.setHorizontalAlignment(SwingConstants.LEFT);
-        Button.setBounds(x, y, width, height);
         
-		frame.getContentPane().add(Button);
-		*/
 		frame.getContentPane().add(Button2);
 
+	}
+	
+	public void drawLabel(int x, int y, int width, int height, String text, boolean visible, String Name) 
+	{
+		position = getPosition(x, y, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		dimension = getPosition(width, height, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+		
+		JLabel Button2 = new JLabel();
+		Button2.setHorizontalAlignment(SwingConstants.CENTER);
+        Button2.setBounds((int)position.getWidth(), (int)position.getHeight(), (int)dimension.getWidth(), (int)dimension.getHeight());
+        Button2.setText(text);
+        Button2.setName(Name);
+        Button2.setVisible(visible);
+        Button2.setForeground(new Color(255,255,255));
+        Button2.setFont(new Font("KG Always A Good Time", Font.PLAIN,15));
+
+        Button2.addMouseListener(new MouseAdapter()  
+        {  
+            public void mouseClicked(MouseEvent e)  
+            {  
+            	          
+            }  
+        }); 
+
+		frame.getContentPane().add(Button2);
 	}
 	
 	public void showNext()
@@ -301,6 +344,8 @@ public class MacImplementor implements WindowImplementor {
 		{
 			indexSelectedImage++;
 			showImage(indexSelectedImage);
+        	refreshDirectionalArrow();
+
 		}
 	}
 	
@@ -310,10 +355,12 @@ public class MacImplementor implements WindowImplementor {
 		{
 			indexSelectedImage--;
 			showImage(indexSelectedImage);
+        	refreshDirectionalArrow();
+
 		}
 	}
 	
-	public void init()
+	public void init(int x, int y)
 	{
 		indexSelectedImage = -1;
 		
@@ -324,12 +371,11 @@ public class MacImplementor implements WindowImplementor {
 
 		int maxWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		int maxHeight = (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()-50);
-		int minWidth = 1100;
-		int minHeight = 700;
+		
 		frame.setMaximizedBounds(new Rectangle(maxWidth, maxHeight));
 		frame.setMinimumSize(new Dimension(minWidth, minHeight));
 		
-		frame.setBounds(100, 100, minWidth, minHeight);
+		frame.setBounds(x, y, minWidth, minHeight);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 	    frame.setUndecorated(true);
@@ -346,7 +392,11 @@ public class MacImplementor implements WindowImplementor {
         // a desktop icon
         image.setVerticalAlignment(SwingConstants.CENTER);
         image.setHorizontalAlignment(SwingConstants.CENTER);
-        image.setBounds(frame.getBounds().width/7, frame.getBounds().height/6 , 800, 500);
+        
+        position = getPosition(14,16, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+        dimension = getPosition(73, 72, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+        
+        image.setBounds((int)position.getWidth(), (int)position.getHeight() , (int)dimension.getWidth(), (int)dimension.getHeight());
                 
         image.setOpaque(true);
         
@@ -403,7 +453,6 @@ public class MacImplementor implements WindowImplementor {
 	}
 	
 	
-	
 	public void showImage(int index)
 	{
 		
@@ -415,21 +464,100 @@ public class MacImplementor implements WindowImplementor {
                 {
                 	if(label.getName().equals("Preview"))
                 	{
-                		label.setIcon(new ImageIcon(proxyList.get(index).getMedia().getScaledInstance(800, 500, Image.SCALE_DEFAULT)));
+                        dimension = getPosition(73, 72, (int)frame.getBounds().getWidth(), (int)frame.getBounds().getHeight());
+                		label.setIcon(new ImageIcon(proxyList.get(index).getMedia().getScaledInstance((int)dimension.getWidth(), (int)dimension.getHeight(), Image.SCALE_DEFAULT)));
+                	}
+                	else if(label.getName().equals("Name"))
+                	{
+                		label.setVisible(true);
+                		label.setText("Nome: " + proxyList.get(index).getName());
+                	}
+                	else if(label.getName().equals("Size"))
+                	{
+                		label.setVisible(true);
+                		
+                		label.setText("Size: " + String.valueOf((float)Math.round(proxyList.get(index).getByte() * 100)/100) + " Mb");
+                	}
+                	else if(label.getName().equals("Resolution"))
+                	{
+                		label.setVisible(true);
+                		label.setText("Risoluzione: " + Math.round(proxyList.get(index).getDimension().getWidth()) + "x" + Math.round(proxyList.get(index).getDimension().getHeight()) + " px");
                 	}
                 }
             }
 		}  
         
 	}
-	
-	
-	public Dimension getPosition(int WidthPercentage, int HeightPercentage)
+	public void refreshDirectionalArrow()
 	{
-		int width = (frame.getWidth() / 100) * WidthPercentage;
-		int height = (frame.getHeight() / 100) * HeightPercentage;
+		
+		for (Component jc : frame.getContentPane().getComponents()) {
+            if (jc instanceof JLabel) {
+                JLabel label = (JLabel) jc;
+                //System.out.println(label.getName());
+                if(label.getName() != null )
+                {
+                	if(label.getName().equals("Next"))
+                	{
+                		if(indexSelectedImage == proxyList.size()-1)
+                			label.setVisible(false);
+                		else
+                			label.setVisible(true);
+                	}
+                	else if(label.getName().equals("Previous"))
+                	{
+                		if(indexSelectedImage == 0)
+                			label.setVisible(false);
+                		else
+                			label.setVisible(true);
+                	}
+                }
+            }
+		}
+		
+        
+	}
+	
+	private void refreshPercentage(int newWidth, int newHeight)
+	{
+		for (Component jc : frame.getContentPane().getComponents()) {
+            if (jc instanceof JLabel) {
+                JLabel label = (JLabel) jc;
+                //System.out.println(label.getName());
+                if(label.getName() != null )
+                {
+                	Dimension percentageDimension = getPercentage((int)label.getBounds().getWidth(), (int)label.getBounds().getHeight());
+                	Dimension percentagePosition = getPercentage((int)label.getBounds().getX(), (int)label.getBounds().getY());
+
+                	
+                	Dimension newDimension = getPosition((int)percentageDimension.getWidth(), (int)percentageDimension.getHeight(), newWidth, newHeight);
+                	Dimension newPosition = getPosition((int)percentagePosition.getWidth(), (int)percentagePosition.getHeight(), newWidth, newHeight);
+                	
+                	System.out.println(label.getName());
+                	System.out.println("Position: " + newPosition.getWidth() + "x" + newPosition.getHeight());
+                	System.out.println("Dimension: " + newDimension.getWidth() + "x" + newDimension.getHeight());
+
+                	label.setBounds((int)newPosition.getWidth(), (int)newPosition.getHeight(), (int)newDimension.getWidth(), (int)newDimension.getHeight());
+                }
+            }
+		}  
+	}
+	
+	public Dimension getPosition(int WidthPercentage, int HeightPercentage, int frameWidth, int frameHeight)
+	{
+		int width = (frameWidth / 100) * WidthPercentage;
+		int height = (frameHeight / 100) * HeightPercentage;
 		return new Dimension(width, height);
 	}
+	public Dimension getPercentage(int Width, int Height)
+	{
+
+		int PercWidth =(int) Math.round((((double)Width / (double)frame.getBounds().getWidth()) * 100));
+		int PercHeight = (int) Math.round((((float)Height / (float)frame.getBounds().getHeight()) * 100));
+
+		return new Dimension(PercWidth, PercHeight);
+	}
+	
 	
 	
 }

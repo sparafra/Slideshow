@@ -18,7 +18,6 @@ import java.awt.Window.Type;
 
 public class Main {
 
-	private JFrame frame;
 	
 	
 	/**
@@ -31,12 +30,15 @@ public class Main {
 			public void run() {
 				try {
 					
-					Window win = new IconWindow(new MacImplementor());
-					win.draw();
-					//win.drawButton(100, 100, 150, 40, "Hello");
-					win.drawLoadButton(50, 50, 150, 40, "Load Image");
-					win.drawPreviousButton(50, 300, 50, 50, "");
-					win.drawNextButton(1000, 300, 50, 50, "");
+					Window win = new IconWindow(new WindowsImplementor());
+					win.draw(400, 100);
+					win.drawLoadButton(5, 5, 14, 6, "Load Image");
+					win.drawPreviousButton(5, 50, 5, 7, "", false);
+					win.drawNextButton(91, 50, 5, 7, "", false);
+					win.drawLabel(10, 89, 30, 5, "Nome: ", false, "Name");
+					win.drawLabel(10, 92, 30, 5, "Risoluzione: ", false, "Resolution");
+					win.drawLabel(10, 95, 30, 5, "Size: ", false, "Size");
+					
 
 					
 					
@@ -48,49 +50,5 @@ public class Main {
 		
 	}
 
-	/**
-	 * Create the application.
-	 */
-	public Main() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 1100, 700);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-	    frame.setUndecorated(true);
-
-		
-        Image background = getScaledImage(new ImageIcon(System.getProperty("user.dir")+"\\Images\\background.jpg").getImage(), 1100, 700);
-        ImageIcon backgroundResized = new ImageIcon(background);
-		
-		frame.getContentPane().setLayout(new BorderLayout());
-		JLabel label = new JLabel(backgroundResized);
-		frame.setContentPane(label);
-		frame.getContentPane().setLayout(null);
-		
-		
-		
-		
-	}
 	
-	
-	
-	private Image getScaledImage(Image srcImg, int w, int h){
-	    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g2 = resizedImg.createGraphics();
-
-	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-	    g2.drawImage(srcImg, 0, 0, w, h, null);
-	    g2.dispose();
-
-	    return resizedImg;
-	}
-
 }
